@@ -30,12 +30,13 @@ type Mode interface {
 
 // StartConsuming enters a loop and waits for incoming messages
 func (eagerBroker *Broker) StartConsuming(consumerTag string, concurrency int, p iface.TaskProcessor) (bool, error) {
-	return true, nil
+	<-eagerBroker.GetStopChan()
+	return eagerBroker.GetRetry(), nil
 }
 
 // StopConsuming quits the loop
 func (eagerBroker *Broker) StopConsuming() {
-	// do nothing
+	eagerBroker.StopConsuming()
 }
 
 // Publish places a new message on the default queue
